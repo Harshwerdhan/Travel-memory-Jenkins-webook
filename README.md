@@ -1,5 +1,7 @@
 # Travel Memory Jenkins webhook
 
+In this project we are going to deploy Node application on EC2 
+
 `.env` file to work with the backend after creating a database in mongodb: 
 
 ```
