@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Install') {
             steps {
-                sh 'cd backend; npm install'
+                sh 'curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash -; sudo apt-get install -y nodejs; cd backend; npm install'
             }
         }
         stage('Build') {
@@ -19,6 +19,7 @@ pipeline {
     }
 
 }
+
 
 
 
