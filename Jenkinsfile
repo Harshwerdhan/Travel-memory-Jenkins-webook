@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent {label 'jenkins-user-agent-1'}
     stages {
         stage('Checkout') {
             steps {
@@ -19,6 +19,7 @@ pipeline {
     }
 
 }
+
 
 
 
