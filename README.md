@@ -1,4 +1,4 @@
-# Travel Memory
+# Travel Memory Jenkins webhook
 
 `.env` file to work with the backend after creating a database in mongodb: 
 
