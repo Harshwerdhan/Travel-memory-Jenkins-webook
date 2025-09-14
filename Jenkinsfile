@@ -1,11 +1,11 @@
 // The Final Travel Memory Jenkinsfile
 pipeline {
     // 1. Use the agent we configured
-    agent { label 'linux' }
+    agent { label 'master' }
 
     // 2. Define the non-secret variables
     environment {
-        DOCKER_IMAGE_NAME = 'your-dockerhub-username/travel-memory' // CHANGE THIS
+        app_name = 'travel_memory' // CHANGE THIS
     }
     
     // 3. Define the parameters for flexibility (for manual runs)
@@ -22,7 +22,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/Harshwerdhan/Travel-memory-Jenkins-webook.git'
+                git branch: 'main', url: 'https://github.com/Harshwerdhan/Travel-memory-Jenkins-webook'
             }
         }
 
@@ -45,33 +45,13 @@ pipeline {
             }
         }
 
-        // stage('Build & Push Docker Image') {
-        //     steps {
-        //         dir('backend') {
-        //             // Use credentials securely
-        //             withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-        //                 echo "Logging into Docker Hub..."
-        //                 sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
-
-        //                 // Create a unique tag for our image using the Jenkins build number
-        //                 def taggedImage = "${env.DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
-                        
-        //                 echo "Building image: ${taggedImage}"
-        //                 // Build the Docker image from the Dockerfile in the current directory
-        //                 // sh "docker build -t ${taggedImage} ."
-        //                 echo "Pushing image: ${taggedImage}"
-        //                 // Push the newly built image to Docker Hub
-        //                 // sh "docker push ${taggedImage}"
-        //             }
-        //         }
-        //     }
-        // }
-
-        stage('AWS S3 Bucket List') {
+        stage('Login to AWS and Check S3 buckets') {
             steps {
-                withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_SECRET_TM']]) {
-                    echo "... Printing S3 bucket list ..."
-                    sh 'aws s3 ls'
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
+                  credentialsId: 'AWS_SECRET_TM']]) {
+                    echo "checking AWS S3 bucket.."
+                    sh "aws s3 ls"
+                    echo "${env.app_name} running on AWS"
                 }
             }
         }
@@ -82,10 +62,10 @@ pipeline {
         always {
             echo "Pipeline finished. Cleaning up."
             // Always logout to be safe
-            sh 'docker logout'
+            echo 'Installed and tested the application'
         }
         success {
-            echo "Image pushed successfully!"
+            echo "Checked S3 Buckets"
         }
     }
 }
