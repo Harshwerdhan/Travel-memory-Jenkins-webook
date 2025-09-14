@@ -44,7 +44,7 @@ pipeline {
                 }
             }
         }
-
+            // AWS things
         stage('Login to AWS and Check S3 buckets') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
