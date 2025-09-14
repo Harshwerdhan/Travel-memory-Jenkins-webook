@@ -45,28 +45,27 @@ pipeline {
             }
         }
 
-        stage('Build & Push Docker Image') {
-            steps {
-                dir('backend') {
-                    // Use credentials securely
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        echo "Logging into Docker Hub..."
-                        sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+        // stage('Build & Push Docker Image') {
+        //     steps {
+        //         dir('backend') {
+        //             // Use credentials securely
+        //             withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+        //                 echo "Logging into Docker Hub..."
+        //                 sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
 
-                        // Create a unique tag for our image using the Jenkins build number
-                        def taggedImage = "${env.DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
+        //                 // Create a unique tag for our image using the Jenkins build number
+        //                 def taggedImage = "${env.DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
                         
-                        echo "Building image: ${taggedImage}"
-                        // Build the Docker image from the Dockerfile in the current directory
-                        // sh "docker build -t ${taggedImage} ."
-                        echo "Pushing image: ${taggedImage}"
-                        // Push the newly built image to Docker Hub
-                        // sh "docker push ${taggedImage}"
-                    }
-                }
-            }
-        }
-    }
+        //                 echo "Building image: ${taggedImage}"
+        //                 // Build the Docker image from the Dockerfile in the current directory
+        //                 // sh "docker build -t ${taggedImage} ."
+        //                 echo "Pushing image: ${taggedImage}"
+        //                 // Push the newly built image to Docker Hub
+        //                 // sh "docker push ${taggedImage}"
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('AWS S3 Bucket List') {
             steps {
@@ -76,6 +75,7 @@ pipeline {
                 }
             }
         }
+    }
     
     // Post-build actions for cleanup
     post {
